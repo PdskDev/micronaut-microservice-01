@@ -1,4 +1,4 @@
-package me.nadetdev.petowner.service;
+package me.nadetdev.petowner.service.owner;
 
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
