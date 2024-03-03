@@ -2,6 +2,8 @@ package me.nadetdev.petowner.domaine;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "owners", schema = "petowner")
@@ -16,22 +18,15 @@ public class Owner implements Serializable {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "address")
-    private String address;
-    @Column(name = "city")
-    private String city;
-    @Column(name = "telephone")
-    private String telephone;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private Set<Pet> pets = new HashSet<>();
 
     public Owner() {
-    }
-
-    public Owner(String firstName, String lastName, String address, String city, String telephone) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.city = city;
-        this.telephone = telephone;
     }
 
     public Long getId() {
@@ -58,27 +53,19 @@ public class Owner implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
-    public String getCity() {
-        return city;
+    public Set<Pet> getPets() {
+        return pets;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setPets(Set<Pet> pets) {
+        this.pets = pets;
     }
 }
