@@ -3,7 +3,9 @@ package me.nadetdev.petowner.domaine;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 
 @Entity
 @Table(name = "owners", schema = "petowner")
@@ -67,5 +69,60 @@ public class Owner implements Serializable {
 
     public void setPets(Set<Pet> pets) {
         this.pets = pets;
+    }
+
+    public Owner firstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public Owner lastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public Owner address(Address address) {
+        this.address = address;
+        return this;
+    }
+
+    public Owner pets(Set<Pet> pets) {
+        this.pets = pets;
+        return this;
+    }
+
+    public Owner addPet(Pet pet) {
+        this.pets.add(pet);
+        pet.setOwner(this);
+        return this;
+    }
+
+    public Owner removePet(Pet pet) {
+        this.pets.remove(pet);
+        pet.setOwner(null);
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Owner owner)) return false;
+        return Objects.equals(getId(), owner.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, address, pets);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Owner.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("firstName='" + firstName + "'")
+                .add("lastName='" + lastName + "'")
+                .add("address=" + address)
+                .add("pets=" + pets)
+                .toString();
     }
 }

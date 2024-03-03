@@ -2,7 +2,10 @@ package me.nadetdev.petowner.domaine;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 @Entity
 @Table(name = "visits", schema = "petowner")
@@ -13,18 +16,19 @@ public class Visit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "pet_id")
-    private Long petId;
+    @ManyToOne
+    @JoinColumn(name="pet_id")
+    private Pet pet;
     @Column(name = "visit_date")
-    private Date visitDate;
+    private LocalDate visitDate;
     @Column(name = "description")
     private String description;
 
     public Visit() {
     }
 
-    public Visit(Long petId, Date visitDate, String description) {
-        this.petId = petId;
+    public Visit(Pet pet, LocalDate visitDate, String description) {
+        this.pet = pet;
         this.visitDate = visitDate;
         this.description = description;
     }
@@ -37,19 +41,19 @@ public class Visit implements Serializable {
         this.id = id;
     }
 
-    public Long getPetId() {
-        return petId;
+    public Pet getPet() {
+        return pet;
     }
 
-    public void setPetId(Long petId) {
-        this.petId = petId;
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
-    public Date getVisitDate() {
+    public LocalDate getVisitDate() {
         return visitDate;
     }
 
-    public void setVisitDate(Date visitDate) {
+    public void setVisitDate(LocalDate visitDate) {
         this.visitDate = visitDate;
     }
 
@@ -59,5 +63,42 @@ public class Visit implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Visit visitDate(LocalDate visitDate) {
+        this.visitDate = visitDate;
+        return this;
+    }
+
+    public Visit description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Visit pet(Pet pet) {
+        this.pet = pet;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Visit visit)) return false;
+        return Objects.equals(getId(), visit.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Visit.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("pet=" + pet)
+                .add("visitDate=" + visitDate)
+                .add("description='" + description + "'")
+                .toString();
     }
 }
